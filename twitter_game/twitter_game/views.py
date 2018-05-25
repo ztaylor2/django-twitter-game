@@ -31,13 +31,15 @@ class HomeView(ListView):
         # NEED TO ACCOUNT FOR ADDING KARMA PTS need to account for adding karma points
 
     # query for all posts under consideration, if they should no longer be under consideration run a funciton
-    posts_under_consideration = Post.objects.filter(validated='NA')
-    if posts_under_consideration:
-        for post in posts_under_consideration:
-            minutes_since_creation = (datetime.now(timezone.utc) - post.time_posted).total_seconds() / 60
-            if minutes_since_creation > 60:
-                determine_post_validation(post)
-                assign_karma_points(post)
+    def update_posts(self):
+        """Check if any posts are under consideration and update them if necessary."""
+        posts_under_consideration = Post.objects.filter(validated='NA')
+        if posts_under_consideration:
+            for post in posts_under_consideration:
+                minutes_since_creation = (datetime.now(timezone.utc) - post.time_posted).total_seconds() / 60
+                if minutes_since_creation > 60:
+                    self.determine_post_validation(post)
+                    self.assign_karma_points(post)
 
     # def get_queryset(self):
     #     """Return the sitters ordered by sitter rank."""
