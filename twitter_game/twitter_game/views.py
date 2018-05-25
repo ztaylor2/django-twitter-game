@@ -47,3 +47,32 @@ class HomeView(ListView):
     #     if 'reviewfilter' in self.request.GET:
     #         queryset = queryset.filter(sitterrank__ratings_score__gte=self.request.GET['reviewfilter'])
     #     return queryset
+
+
+from django.shortcuts import get_object_or_404
+import json
+from django.http import HttpResponse
+
+
+# @login_required
+# @require_POST
+def like(request):
+    """."""
+    if request.method == 'POST':
+        user = request.user
+        slug = request.POST.get('slug', None)
+        post = get_object_or_404(Post, slug=slug)
+
+        if post.likes.filter(id=user.id).exists():
+            # user has already liked this post
+            # remove like/user
+            post.likes.remove(user)
+            message = 'You disliked this'
+        else:
+            # add a new like for a post
+            post.likes.add(user)
+            message = 'You liked this'
+
+    ctx = {'likes_count': post.total_likes, 'message': message}
+    # use mimetype instead of content_type if django < 5
+    return HttpResponse(json.dumps(ctx), content_type='application/json')
