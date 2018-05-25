@@ -1,0 +1,49 @@
+{% extends "twitter_game/base.html" %}
+
+{% block body %}
+
+    <main class="article-content">
+      <div class="page-header">
+        <h1 class="page-title" style="margin: 1em;">Home</h1>
+      </div>
+      <div class="card">
+        <div class="card-body">
+
+            <table class="table table-striped" style="margin-top: 40px;">
+              <thead>
+                  <tr>
+                      <th scope="col">Body</th>
+                      <th scope="col">Likes</th>
+                      <th scope="col">Dislikes</th>
+                      <th scope="col">Date Published</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  
+                  {% for post in post_list %}
+
+                      <tr>
+                          <td>{{ post.body }}</td>
+                          <td>;laskdjf</td>
+                          <td>;laskdjf</td>
+                          <td>{{ post.time_posted }}</td>
+                      </tr>
+
+                  {% endfor %}
+
+              </tbody>
+          </table>
+
+        </div>
+        <div class="card-footer text-muted">
+          {% if request.user.is_authenticated %}
+            <p class="card-text">Welcome {{ request.user.username }}</p>
+          {% else %}
+            <p class="card-text">Welcome! Login or register to create and vote on posts.</p>
+          {% endif %}
+        </div>
+      </div>
+
+
+    </main>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "twitter_game/base.html" %}
+
+{% block body %}
+  <form method="post">
+    {% csrf_token %}
+    <main class="article-content">
+      <div class="page-header">
+        <h1>Login</h1>
+      </div>
+      <div class="card">
+        <div class="card-body">
+            {{ form.as_p }}
+            <div class="submit-button">
+            </div>
+          <p class="card-text"></p>
+        </div>
+        <div class="card-footer text-muted">
+              <input type="submit" class="btn btn-primary"></input>
+        </div>
+      </div>
+    </main>
+  </form>
+{% endblock %}

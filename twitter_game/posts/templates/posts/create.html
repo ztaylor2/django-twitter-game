@@ -1,0 +1,11 @@
+{% extends "twitter_game/base.html" %}
+
+{% block body %}
+    
+    <form action="" method="post" style="padding-top: 100px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save" />
+    </form>
+
+{% endblock %}
