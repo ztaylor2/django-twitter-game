@@ -9,10 +9,15 @@
       <div class="card">
         <div class="card-body">
 
+            {% if request.user.profile.eligibility == 'No' %}
+              You are not currently eligible to vote. You will be eligible 24 hours from {{ request.user.profile.time_ineligible }} 
+            {% endif %}
+
             <table class="table table-striped" style="margin-top: 40px;">
               <thead>
                   <tr>
                       <th scope="col">Body</th>
+                      <th scope="col">Validated</th>
                       <th scope="col">Likes</th>
                       <th scope="col">Dislikes</th>
                       <th scope="col">Date Published</th>
@@ -24,8 +29,22 @@
 
                       <tr>
                           <td>{{ post.body }}</td>
-                          <td>;laskdjf</td>
-                          <td>;laskdjf</td>
+                          <td>{% if post.validated == 'Yes' %}  
+                                &#10004; 
+                              {% elif post.validated == 'No' %} 
+                                &#10005; 
+                              {% else %} 
+                                Not Yet 
+                              {% endif %}</td>
+                          <td>{{ post.total_likes }} 
+                            {% if request.user.profile.eligibility == 'Yes' and post.validated == 'NA' %}
+                              <input type="button" class="like" name="{{ post.id }}" value="Like" />
+                            {% endif %}
+                          </td>
+                          <td>{{ post.total_dislikes }}
+                            {% if request.user.profile.eligibility == 'Yes' and post.validated == 'NA' %}
+                              <input type="button" class="dislike" name="{{ post.id }}" value="Dislike" /></td>
+                            {% endif %}
                           <td>{{ post.time_posted }}</td>
                       </tr>
 
@@ -43,7 +62,46 @@
           {% endif %}
         </div>
       </div>
-
-
     </main>
+
+{% endblock %}
+
+
+
+{% block script %}
+  <script>
+    $('.like').click(function(){
+      console.log('like clicked')
+          $.ajax({
+                   type: "POST",
+                   url: "{% url 'like' %}",
+                   data: {'post_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                   dataType: "json",
+                   success: function(response) {
+                          alert(response.message);
+                          alert('Post likes count is now ' + response.likes_count);
+                    },
+                    error: function(rs, e) {
+                           alert(rs.responseText);
+                    }
+              }); 
+        })
+
+    $('.dislike').click(function(){
+      console.log('dislike clicked')
+          $.ajax({
+                   type: "POST",
+                   url: "{% url 'dislike' %}",
+                   data: {'post_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                   dataType: "json",
+                   success: function(response) {
+                          alert(response.message);
+                          alert('Post dislikes count is now ' + response.dislikes_count);
+                    },
+                    error: function(rs, e) {
+                           alert(rs.responseText);
+                    }
+              }); 
+        })
+    </script>
 {% endblock %}

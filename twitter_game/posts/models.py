@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 
 class UserProfile(models.Model):
-    """The imager profile model."""
+    """The profile model."""
 
     ELIGIBILITY_CHOICES = (
         ('Yes', 'Y'),
@@ -40,6 +40,16 @@ class Post(models.Model):
                              on_delete=models.CASCADE,
                              related_name='photo')
     time_posted = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    @property
+    def total_likes(self):
+        """Total likes for the post."""
+        return self.like.count()
+
+    @property
+    def total_dislikes(self):
+        """Total dislikes for the post."""
+        return self.dislike.count()
 
 
 class Like(models.Model):
