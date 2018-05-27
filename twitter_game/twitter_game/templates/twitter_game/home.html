@@ -45,19 +45,21 @@
       </div>
     </main>
 
+{% endblock %}
 
-    <input type="button" id="like" name="{{ company_slug }}" value="Like" />
 
-    <script>
+
+{% block script %}
+  <script>
     $('#like').click(function(){
           $.ajax({
                    type: "POST",
                    url: "{% url 'like' %}",
-                   data: {'slug': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                   data: {'post_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                    dataType: "json",
                    success: function(response) {
                           alert(response.message);
-                          alert('Company likes count is now ' + response.likes_count);
+                          alert('Post likes count is now ' + response.likes_count);
                     },
                     error: function(rs, e) {
                            alert(rs.responseText);
@@ -65,5 +67,4 @@
               }); 
         })
     </script>
-
 {% endblock %}
