@@ -50,7 +50,7 @@ def like(request):
         the_like.delete()
         message = 'You unliked this'
 
-    likes_count = post.total_dislikes
+    likes_count = post.total_likes
 
     ctx = {'likes_count': likes_count, 'message': message}
     return HttpResponse(json.dumps(ctx), content_type='application/json')

@@ -13,9 +13,7 @@ class HomeView(ListView):
 
     def determine_post_validation(self, post):
         """Determine if a post is validated."""
-        likes = post.like.count()
-        dislikes = post.dislike.count()
-        if likes - dislikes > 0:
+        if post.total_likes - post.total_dislikes > 0:
             post.validated = 'Yes'
         else:
             post.validated = 'No'
@@ -27,23 +25,46 @@ class HomeView(ListView):
             for like in post.like.all():
                 profile = like.user.profile
                 profile.karma -= 10
+                profile.correct_count = 0
                 profile.save()
-        # NEED TO ACCOUNT FOR ADDING KARMA PTS need to account for adding karma points
 
-    # query for all posts under consideration, if they should no longer be under consideration run a funciton
+            for dislike in post.dislike.all():
+                profile = dislike.user.profile
+                if profile.correct_count == 2:
+                    profile.karma += 20
+                if profile.correct_count >= 3:
+                    profile.karma += 50
+                profile.correct_count += 1
+                profile.save()
+
+        if post.validated == 'Yes':
+            for dislike in post.dislike.all():
+                profile = dislike.user.profile
+                profile.karma -= 10
+                profile.correct_count = 0
+                profile.save()
+
+            for like in post.like.all():
+                profile = like.user.profile
+                if profile.correct_count == 2:
+                    profile.karma += 20
+                if profile.correct_count >= 3:
+                    profile.karma += 50
+                profile.correct_count += 1
+                profile.save()
+
     def update_posts(self):
         """Check if any posts are under consideration and update them if necessary."""
         posts_under_consideration = Post.objects.filter(validated='NA')
         if posts_under_consideration:
             for post in posts_under_consideration:
                 minutes_since_creation = (datetime.now(timezone.utc) - post.time_posted).total_seconds() / 60
-                if minutes_since_creation > 60:
+                if minutes_since_creation > 1:
                     self.determine_post_validation(post)
                     self.assign_karma_points(post)
 
-    # def get_queryset(self):
-    #     """Return the sitters ordered by sitter rank."""
-    #     queryset = SitterProfile.objects.order_by('sitterrank__sitter_rank').reverse()
-    #     if 'reviewfilter' in self.request.GET:
-    #         queryset = queryset.filter(sitterrank__ratings_score__gte=self.request.GET['reviewfilter'])
-    #     return queryset
+    def get_queryset(self):
+        """Return the sitters ordered by sitter rank."""
+        self.update_posts()
+        queryset = Post.objects.order_by('time_posted').reverse()
+        return queryset
