@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 
 class UserProfile(models.Model):
-    """The imager profile model."""
+    """The profile model."""
 
     ELIGIBILITY_CHOICES = (
         ('Yes', 'Y'),

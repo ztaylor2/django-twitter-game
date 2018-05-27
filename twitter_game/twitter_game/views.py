@@ -60,7 +60,7 @@ class HomeView(ListView):
         if posts_under_consideration:
             for post in posts_under_consideration:
                 minutes_since_creation = (datetime.now(timezone.utc) - post.time_posted).total_seconds() / 60
-                if minutes_since_creation > 1:
+                if minutes_since_creation > 60:
                     self.determine_post_validation(post)
                     self.assign_karma_points(post)
 
