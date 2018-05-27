@@ -41,6 +41,16 @@ class Post(models.Model):
                              related_name='photo')
     time_posted = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    @property
+    def total_likes(self):
+        """Total likes for the post."""
+        return self.like.count()
+
+    @property
+    def total_dislikes(self):
+        """Total dislikes for the post."""
+        return self.dislike.count()
+
 
 class Like(models.Model):
     """The model for a like."""

@@ -24,8 +24,8 @@
 
                       <tr>
                           <td>{{ post.body }}</td>
-                          <td><input type="button" id="like" name="{{ post.id }}" value="Like" /></td>
-                          <td>;laskdjf</td>
+                          <td>{{ post.total_likes }}<input type="button" class="like" name="{{ post.id }}" value="Like" /></td>
+                          <td>{{ post.total_dislikes }}<input type="button" class="dislike" name="{{ post.id }}" value="Dislike" /></td>
                           <td>{{ post.time_posted }}</td>
                       </tr>
 
@@ -51,7 +51,8 @@
 
 {% block script %}
   <script>
-    $('#like').click(function(){
+    $('.like').click(function(){
+      console.log('like clicked')
           $.ajax({
                    type: "POST",
                    url: "{% url 'like' %}",
@@ -60,6 +61,23 @@
                    success: function(response) {
                           alert(response.message);
                           alert('Post likes count is now ' + response.likes_count);
+                    },
+                    error: function(rs, e) {
+                           alert(rs.responseText);
+                    }
+              }); 
+        })
+
+    $('.dislike').click(function(){
+      console.log('dislike clicked')
+          $.ajax({
+                   type: "POST",
+                   url: "{% url 'dislike' %}",
+                   data: {'post_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                   dataType: "json",
+                   success: function(response) {
+                          alert(response.message);
+                          alert('Post dislikes count is now ' + response.dislikes_count);
                     },
                     error: function(rs, e) {
                            alert(rs.responseText);
