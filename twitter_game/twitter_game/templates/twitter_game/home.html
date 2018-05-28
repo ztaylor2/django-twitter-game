@@ -10,7 +10,7 @@
         <div class="card-body">
 
             {% if request.user.profile.eligibility == 'No' %}
-              You are not currently eligible to vote. You will be eligible 24 hours from {{ request.user.profile.time_ineligible }} 
+              You are not currently eligible to vote. 
             {% endif %}
 
             <table class="table table-striped" style="margin-top: 40px;">

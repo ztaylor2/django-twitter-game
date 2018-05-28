@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     'registration',
     'twitter_game',
     'posts',
@@ -79,10 +80,10 @@ WSGI_APPLICATION = 'twitter_game.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME', ''),
-        'HOST': os.environ.get('DATABASE_HOST', ''),
+        'NAME': 'twittergame',
+        'HOST': 'localhost',
         'TEST': {
-            'NAME': os.environ.get('DATABASE_TEST', '')
+            'NAME': 'test_twittergame'
         },
     }
 }
